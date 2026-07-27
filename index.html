@@ -14,6 +14,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:#26215C;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
 #app{display:flex;flex-direction:column;height:100%;height:100dvh;max-width:430px;margin:0 auto;background:#f0eeea;position:relative;overflow:hidden;}
+@media (min-width:431px){#app{max-width:100%;border-left:none;border-right:none;}}
 
 /* ── TIER BANNER ─── */
 #tier-banner{background:linear-gradient(135deg,#1a1730,#26215C);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid #3C3489;}
@@ -44,7 +45,10 @@ html,body{height:100%;overflow:hidden;background:#26215C;font-family:-apple-syst
 .screen.hidden{display:none;}
 
 /* ── NAV ─── */
-.nav{background:#26215C;display:flex;padding:5px 0;padding-bottom:calc(env(safe-area-inset-bottom,0) + 5px);border-top:1px solid #3C3489;flex-shrink:0;}
+.nav{background:#26215C;display:flex;padding:8px 0;padding-bottom:calc(env(safe-area-inset-bottom,0) + 10px);border-top:1px solid #3C3489;flex-shrink:0;min-height:62px;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;cursor:pointer;padding:4px 0;font-size:8px;font-weight:500;font-family:inherit;min-height:52px;justify-content:center;position:relative;}
+.nb svg{width:22px;height:22px;fill:#EF9F27;transition:fill 0.15s;}
+.nb span{color:#EF9F27;transition:color 0.15s;}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;cursor:pointer;padding:3px 0;font-size:7px;font-weight:500;font-family:inherit;min-height:42px;justify-content:center;position:relative;}
 .nb svg{width:19px;height:19px;fill:#EF9F27;transition:fill 0.15s;}
 .nb span{color:#EF9F27;transition:color 0.15s;}
