@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- nav fix v2 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,25 +11,18 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Event Commander</title>
 <style>
-#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}.screen{flex:1;overflow-y:auto;min-height:0;}.nav{flex-shrink:0;}
 /* ══ LAYOUT ══════════════════════════════════════════════ */
-html,body{height:100%;margin:0;padding:0;overflow:hidden;background:#26215C;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-
-#app{display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;background:#f0eeea;overflow:hidden;}
-
-#tier-banner{flex-shrink:0;background:linear-gradient(135deg,#1a1730,#26215C);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3C3489;}
-
-.hdr{flex-shrink:0;background:#26215C;padding:8px 14px 10px;padding-top:calc(env(safe-area-inset-top,0) + 8px);}
-
-.screen{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:11px;min-height:0;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:#26215C;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+#app{display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;height:calc(var(--vh,1vh)*100);background:#f0eeea;overflow:hidden;}
+#tier-banner{flex:0 0 auto;background:linear-gradient(135deg,#1a1730,#26215C);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3C3489;}
+.hdr{flex:0 0 auto;background:#26215C;padding:8px 14px 10px;padding-top:calc(env(safe-area-inset-top,0) + 8px);}
+.screen{flex:1 1 0%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:11px;min-height:0;min-width:0;}
 .screen::-webkit-scrollbar{display:none;}
 .screen.hidden{display:none;}
-
-.nav{flex-shrink:0;background:#26215C;display:flex;border-top:2px solid #3C3489;padding-bottom:env(safe-area-inset-bottom,0);}
-
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;cursor:pointer;padding:8px 2px;font-size:8px;font-weight:500;font-family:inherit;position:relative;}
-.nb svg{width:20px;height:20px;fill:#EF9F27;transition:fill 0.15s;}
+.nav{flex:0 0 auto;background:#26215C;display:flex;padding:5px 0;padding-bottom:env(safe-area-inset-bottom,0);border-top:2px solid #3C3489;min-height:50px;width:100%;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;cursor:pointer;padding:3px 0;font-size:7px;font-weight:500;font-family:inherit;min-height:42px;justify-content:center;position:relative;}
+.nb svg{width:19px;height:19px;fill:#EF9F27;transition:fill 0.15s;}
 .nb span{color:#EF9F27;transition:color 0.15s;}
 .nb.active svg{fill:#fff;}
 .nb.active span{color:#fff;}
@@ -57,15 +49,7 @@ html,body{height:100%;overflow:hidden;background:#26215C;font-family:-apple-syst
 /* tier banner ~32px + header ~62px = ~94px total */
 
 /* ── INSTALL BANNER ── */
-.install-banner{
-  position:fixed;
-  top:94px;left:0;right:0;
-  z-index:49;
-  background:#3C3489;
-  padding:10px 14px;
-  display:none;
-  align-items:center;
-  gap:9px;
+.install-banner{background:#3C3489;padding:10px 14px;display:none;align-items:center;gap:9px;flex-shrink:0;
 
 .install-banner.show{display:flex;}
   .tier-btn{font-size:10px;padding:4px 12px;}
@@ -336,6 +320,57 @@ body.hicon .section-lbl,.hicon .drop-lbl{color:#CAEB00;}
 body.hicon 
 body.hicon .nb svg{fill:#CAEB00;} body.hicon .nb span{color:#CAEB00;}
 body.hicon .toggle.on{background:#CAEB00;} body.hicon .toggle.on::after{background:#000;}
+
+/* ══ PLATFORM-SPECIFIC OVERRIDES ════════════════════════════════ */
+/* Applied by JavaScript at load time based on detected platform   */
+
+/* iOS Safari */
+body.platform-ios #app {
+  height: -webkit-fill-available;
+}
+body.platform-ios .nav {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+  min-height: 54px;
+}
+body.platform-ios .screen {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}
+body.platform-ios .hdr {
+  padding-top: max(env(safe-area-inset-top, 0px), 8px);
+}
+
+/* Android Chrome */
+body.platform-android .nav {
+  min-height: 52px;
+  padding-bottom: 4px;
+}
+body.platform-android .screen {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Desktop */
+body.platform-desktop #app {
+  max-width: 430px;
+  margin: 0 auto;
+  box-shadow: 0 0 40px rgba(0,0,0,0.3);
+}
+body.platform-desktop .screen {
+  overflow-y: auto;
+}
+
+/* PWA standalone mode — no browser chrome */
+@media (display-mode: standalone) {
+  body.platform-ios #app {
+    height: 100vh;
+    height: 100dvh;
+  }
+  body.platform-ios .nav {
+    padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
+  }
+}
+/* ═══════════════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -4083,28 +4118,19 @@ function closePitch() { if(pitchTimer) clearInterval(pitchTimer); document.getEl
 
 // ── INSTALL ────────────────────────────────────────────────────────────────
 let deferredPrompt=null;
-// ── RUNTIME HEIGHT FIX — forces correct layout on all devices ─────────────
-function fixLayout() {
-  const vh = window.innerHeight;
-  const tierH = document.getElementById('tier-banner').offsetHeight || 34;
-  const hdrH = document.querySelector('.hdr').offsetHeight || 62;
-  const navH = document.querySelector('.nav').offsetHeight || 60;
-  const screenH = vh - tierH - hdrH - navH;
-
-  // Set exact pixel heights on all key elements
-  document.querySelector('.nav').style.height = navH + 'px';
-
-  document.querySelectorAll('.screen').forEach(s => {
-    s.style.height = screenH + 'px';
-    s.style.maxHeight = screenH + 'px';
-  });
-
-  console.log(`Layout: vh=${vh} tier=${tierH} hdr=${hdrH} nav=${navH} screen=${screenH}`);
-}
-
-window.addEventListener('load', fixLayout);
-window.addEventListener('resize', fixLayout);
-window.addEventListener('orientationchange', () => setTimeout(fixLayout, 300));
+// ── LAYOUT VERIFICATION ──────────────────────────────────────────────────
+// Pure CSS handles layout - no JavaScript height calculation needed
+// dvh units + flex:0 0 auto on fixed elements + flex:1 1 0% on screen
+// ensures correct rendering on both iOS Safari and Android Chrome
+window.addEventListener('load', () => {
+  // Log layout dimensions for debugging
+  const app = document.getElementById('app');
+  const nav = document.querySelector('.nav');
+  const screen = document.querySelector('.screen:not(.hidden)');
+  if (app && nav && screen) {
+    console.log('Layout check — app:', app.offsetHeight, 'nav:', nav.offsetHeight, 'screen:', screen.offsetHeight, 'window:', window.innerHeight);
+  }
+});
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('install-banner').classList.add('show');});
 document.getElementById('install-btn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('install-banner').classList.remove('show');});
@@ -4326,6 +4352,41 @@ function setLERole(num, role, btn) {
 
 
 // Change DEMO_CODE to update the access code — all existing installs lock out immediately
+// ── PLATFORM DETECTION ────────────────────────────────────────────────────
+(function detectPlatform() {
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const isIPadOS = navigator.maxTouchPoints > 1 && /Mac/.test(ua);
+  const isAndroid = /Android/.test(ua);
+  const isDesktop = !isIOS && !isIPadOS && !isAndroid;
+  const isStandalone = window.navigator.standalone === true ||
+                       window.matchMedia('(display-mode: standalone)').matches;
+
+  // Apply platform class to body immediately
+  if (isIOS || isIPadOS) {
+    document.body.classList.add('platform-ios');
+    // Fix for iOS viewport height bug
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', () => setTimeout(setVh, 300));
+    console.log('Platform: iOS/iPadOS' + (isStandalone ? ' (standalone PWA)' : ' (browser)'));
+  } else if (isAndroid) {
+    document.body.classList.add('platform-android');
+    console.log('Platform: Android' + (isStandalone ? ' (standalone PWA)' : ' (browser)'));
+  } else {
+    document.body.classList.add('platform-desktop');
+    console.log('Platform: Desktop');
+  }
+
+  if (isStandalone) {
+    document.body.classList.add('platform-standalone');
+  }
+})();
+
 const DEMO_CODE = 'COMMANDER';
 
 function checkCode() {
