@@ -3894,6 +3894,8 @@ function switchScreen(name) {
   const nb = document.getElementById('nb-'+name);
   if (nb) nb.classList.add('active');
   currentScreen = name;
+  // Reapply layout after screen switch
+  setTimeout(applyLayout, 50);
 }
 
 // ── MODE ───────────────────────────────────────────────────────────────────
@@ -4116,19 +4118,51 @@ function closePitch() { if(pitchTimer) clearInterval(pitchTimer); document.getEl
 
 // ── INSTALL ────────────────────────────────────────────────────────────────
 let deferredPrompt=null;
-// ── LAYOUT VERIFICATION ──────────────────────────────────────────────────
-// Pure CSS handles layout - no JavaScript height calculation needed
-// dvh units + flex:0 0 auto on fixed elements + flex:1 1 0% on screen
-// ensures correct rendering on both iOS Safari and Android Chrome
-window.addEventListener('load', () => {
-  // Log layout dimensions for debugging
+// ── DEFINITIVE LAYOUT FIX ────────────────────────────────────────────────
+function applyLayout() {
   const app = document.getElementById('app');
-  const nav = document.querySelector('.nav');
-  const screen = document.querySelector('.screen:not(.hidden)');
-  if (app && nav && screen) {
-    console.log('Layout check — app:', app.offsetHeight, 'nav:', nav.offsetHeight, 'screen:', screen.offsetHeight, 'window:', window.innerHeight);
-  }
-});
+  const tierBanner = document.getElementById('tier-banner');
+  const hdr = document.querySelector('.hdr');
+  const nav = document.getElementById('main-nav');
+  
+  if (!app || !nav) return;
+  
+  // Get actual window height (accounts for browser chrome on all platforms)
+  const winH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  
+  // Measure fixed elements
+  const tierH = tierBanner ? tierBanner.getBoundingClientRect().height : 0;
+  const hdrH = hdr ? hdr.getBoundingClientRect().height : 0;
+  
+  // Force nav to a known height
+  nav.style.minHeight = '54px';
+  nav.style.height = '54px';
+  nav.style.flexShrink = '0';
+  nav.style.flexGrow = '0';
+  
+  // Calculate exact screen content height
+  const screenH = winH - tierH - hdrH - 54;
+  
+  // Apply to all screens
+  document.querySelectorAll('.screen').forEach(s => {
+    if (!s.classList.contains('hidden')) {
+      s.style.height = screenH + 'px';
+      s.style.maxHeight = screenH + 'px';
+      s.style.overflowY = 'auto';
+    }
+  });
+  
+  console.log(`applyLayout: win=${winH} tier=${tierH} hdr=${hdrH} nav=54 screen=${screenH}`);
+}
+
+// Run at multiple points to catch all rendering scenarios
+document.addEventListener('DOMContentLoaded', () => setTimeout(applyLayout, 50));
+window.addEventListener('load', () => setTimeout(applyLayout, 100));
+window.addEventListener('resize', applyLayout);
+window.addEventListener('orientationchange', () => setTimeout(applyLayout, 400));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', applyLayout);
+}
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('install-banner').classList.add('show');});
 document.getElementById('install-btn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('install-banner').classList.remove('show');});
