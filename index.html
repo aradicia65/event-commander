@@ -14,13 +14,13 @@
 /* ══ LAYOUT ══════════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:#26215C;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
-#app{display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;height:calc(var(--vh,1vh)*100);background:#f0eeea;overflow:clip;}
+#app{display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;height:calc(var(--vh,1vh)*100);background:#f0eeea;overflow:visible;}
 #tier-banner{flex:0 0 auto;background:linear-gradient(135deg,#1a1730,#26215C);padding:6px 12px;padding-top:calc(env(safe-area-inset-top,0px) + 6px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3C3489;}
 .hdr{flex:0 0 auto;background:#26215C;padding:8px 14px 10px;padding-top:calc(env(safe-area-inset-top,0) + 8px);}
-.screen{flex:1 1 0%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:11px;min-height:0;min-width:0;}
+.screen{flex:1 1 0%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:11px;padding-bottom:70px;min-height:0;min-width:0;}
 .screen::-webkit-scrollbar{display:none;}
 .screen.hidden{display:none;}
-.nav{flex:0 0 auto;background:#26215C;display:flex;padding:5px 0;padding-bottom:env(safe-area-inset-bottom,0);border-top:2px solid #3C3489;min-height:50px;width:100%;}
+.nav{position:fixed!important;bottom:0!important;left:0!important;right:0!important;height:54px!important;background:#26215C!important;display:flex!important;border-top:2px solid #3C3489!important;z-index:9999!important;padding-bottom:env(safe-area-inset-bottom,0px)!important;}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;cursor:pointer;padding:3px 0;font-size:7px;font-weight:500;font-family:inherit;min-height:42px;justify-content:center;position:relative;}
 .nb svg{width:19px;height:19px;fill:#EF9F27;transition:fill 0.15s;}
 .nb span{color:#EF9F27;transition:color 0.15s;}
